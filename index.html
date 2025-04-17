@@ -1,7 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spinning Taco Surprise</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 100px;
+      background: #f9f9f9;
+    }
+    .emoji {
+      font-size: 80px;
+      animation: spin 5s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: #ff9800;
+      color: white;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+  </style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+
+  <div class="emoji">🌮</div>
+  <h1>Welcome to the Taco Zone</h1>
+  <button onclick="showMessage()">Click me for a surprise</button>
+  <p id="surprise" style="margin-top:20px; font-size: 18px; color: #333;"></p>
+
+  <script>
+    const messages = [
+      "You deserve a taco today 🌮",
+      "Keep spinning, just like this taco!",
+      "You clicked the button. Good things are coming.",
+      "This is not a drill. Eat tacos.",
+      "Why are you still reading this? Go eat!"
+    ];
+    function showMessage() {
+      const msg = messages[Math.floor(Math.random() * messages.length)];
+      document.getElementById('surprise').textContent = msg;
+    }
+  </script>
+
 </body>
 </html>
