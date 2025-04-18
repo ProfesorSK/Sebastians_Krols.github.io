@@ -1,0 +1,83 @@
+/* src/styles.css */
+
+/* Global Reset */
+body {
+   margin: 0;
+   font-family: 'Segoe UI', sans-serif;
+   background-color: #fdfdfd;
+   color: #222;
+   scroll-behavior: smooth;
+ }
+ 
+ /* Section Styling */
+ .section {
+   padding: 80px 0;
+   border-bottom: 1px solid #eee;
+ }
+ 
+ /* Headings */
+ h2 {
+   font-size: 2.2rem;
+   font-weight: 600;
+   margin-bottom: 1rem;
+   color: #222;
+ }
+ 
+ h5 {
+   margin-bottom: 0.5rem;
+   font-weight: 500;
+   color: #333;
+ }
+ 
+ /* Paragraphs */
+ p {
+   font-size: 1rem;
+   color: #555;
+   line-height: 1.6;
+ }
+ 
+ /* Navbar overrides */
+ .navbar-dark .navbar-nav .nav-link {
+   color: #ddd;
+   transition: color 0.2s;
+ }
+ .navbar-dark .navbar-nav .nav-link:hover {
+   color: #fff;
+ }
+ 
+ /* Floating 3D model container */
+ .model-card {
+   border: 1px solid #ddd;
+   border-radius: 12px;
+   overflow: hidden;
+   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+   transition: transform 0.3s ease;
+ }
+ .model-card:hover {
+   transform: translateY(-5px);
+ }
+ 
+ /* Contact form */
+ form label {
+   font-weight: 500;
+ }
+ form input,
+ form textarea {
+   border-radius: 6px;
+   border: 1px solid #ccc;
+ }
+ form button {
+   margin-top: 8px;
+ }
+ 
+ /* Responsive tweaks */
+ @media (max-width: 768px) {
+   h2 {
+     font-size: 1.7rem;
+   }
+ 
+   .section {
+     padding: 60px 0;
+   }
+ }
+ 
