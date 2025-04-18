@@ -1,25 +1,15 @@
-// src/App.js
+// src/App.jsx
 import React from 'react';
-import Navbar from './components/Navbar';
-import About from './components/About';
-import Projects from './components/Projects';
-import Contact from './components/Contact';
-import './styles.css';
+import { Routes, Route } from 'react-router-dom';
+import Home from './components/Home.jsx';
+import ModelPage from './components/ModelPage.jsx';
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <section id="about" className="section">
-        <About />
-      </section>
-      <section id="projects" className="section">
-        <Projects />
-      </section>
-      <section id="contact" className="section">
-        <Contact />
-      </section>
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/viewer" element={<ModelPage />} />
+    </Routes>
   );
 }
 

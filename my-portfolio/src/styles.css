@@ -2,12 +2,13 @@
 
 /* Global Reset */
 body {
-   margin: 0;
-   font-family: 'Segoe UI', sans-serif;
-   background-color: #fdfdfd;
-   color: #222;
-   scroll-behavior: smooth;
- }
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #ffffff;
+  color: #222;
+  scroll-behavior: smooth;
+}
+
  
  /* Section Styling */
  .section {
