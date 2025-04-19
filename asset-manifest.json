@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Sebastians_Krols.github.io/static/css/main.7ba047f6.css",
+    "main.js": "/Sebastians_Krols.github.io/static/js/main.1bab6cd1.js",
+    "static/js/453.1ea18a7c.chunk.js": "/Sebastians_Krols.github.io/static/js/453.1ea18a7c.chunk.js",
+    "index.html": "/Sebastians_Krols.github.io/index.html",
+    "main.7ba047f6.css.map": "/Sebastians_Krols.github.io/static/css/main.7ba047f6.css.map",
+    "main.1bab6cd1.js.map": "/Sebastians_Krols.github.io/static/js/main.1bab6cd1.js.map",
+    "453.1ea18a7c.chunk.js.map": "/Sebastians_Krols.github.io/static/js/453.1ea18a7c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7ba047f6.css",
+    "static/js/main.1bab6cd1.js"
+  ]
+}
