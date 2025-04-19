@@ -13,9 +13,12 @@ function App() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
+
+    // 1. Setup Babylon engine and scene
     const engine = new BABYLON.Engine(canvas, true);
     const scene = new BABYLON.Scene(engine);
 
+    // 2. Add camera and attach to canvas
     const camera = new BABYLON.ArcRotateCamera(
       "camera",
       Math.PI / 2,
@@ -27,64 +30,100 @@ function App() {
     camera.attachControl(canvas, true);
     cameraRef.current = camera;
 
-    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
+    // 3. Add light
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 1.2;
 
-    BABYLON.SceneLoader.ImportMesh("", "/", "model.glb", scene, function (meshes) {
-      modelRef.current = new BABYLON.TransformNode("modelRoot", scene);
-meshes.forEach(mesh => {
-  mesh.setParent(modelRef.current);
-});
+    // 4. Load the 3D model from public/
+    BABYLON.SceneLoader.ImportMesh(
+      "",
+      process.env.PUBLIC_URL + "/",
+      "model.glb",
+      scene,
+      (meshes) => {
+        // Create a parent node to transform the model as a group
+        const modelRoot = new BABYLON.TransformNode("modelRoot", scene);
+        meshes.forEach(mesh => mesh.setParent(modelRoot));
+        modelRef.current = modelRoot;
 
+        // START below the screen (y = -5)
+        modelRoot.position.y = -5;
 
-      // ✅ Section 1: Zoom in only
-      gsap.to(cameraRef.current, {
-        radius: 3,
-        scrollTrigger: {
-          trigger: "#section1",
-          start: "top center",
-          end: "bottom center",
-          scrub: true,
-        }
-      });
+        // Wait for everything to be ready
+        scene.executeWhenReady(() => {
+          // 🔒 Disable scroll while intro is happening
+          document.body.style.overflow = 'hidden';
 
-      // ✅ Section 2: Spin only
-      gsap.to(modelRef.current.rotation, {
-        y: Math.PI / 1,
-        scrollTrigger: {
-          trigger: "#section2",
-          start: "top center",
-          end: "bottom center",
-          scrub: true,
-        }
-      });
+          // 5. Animate intro (name fade out, model slide up)
+          const tl = gsap.timeline({
+            delay: 0.5,
+            onComplete: () => {
+              // ✅ Re-enable scrolling
+              document.body.style.overflow = 'auto';
+            }
+          });
 
-      // ✅ Feature Text 1 fade-in
-      gsap.to("#featureText1", {
-        opacity: 1,
-        scrollTrigger: {
-          trigger: "#section1",
-          start: "top center",
-          end: "bottom center",
-          scrub: true,
-        }
-      });
+          // Fade out the name text
+          tl.to("#intro-text", {
+            opacity: 0,
+            duration: 1,
+            ease: "power2.out"
+          });
 
-      // ✅ Feature Text 2 fade-in
-      gsap.to("#featureText2", {
-        opacity: 1,
-        scrollTrigger: {
-          trigger: "#section2",
-          start: "top center",
-          end: "bottom center",
-          scrub: true,
-        }
-      });
-    });
+          // Slide model into view
+          tl.to(modelRoot.position, {
+            y: 0,
+            duration: 1.2,
+            ease: "power3.out"
+          }, "-=0.8");
 
+          // Hide intro overlay
+          tl.to("#intro-container", {
+            opacity: 0,
+            duration: 0.5,
+            pointerEvents: 'none'
+          }, "-=0.8");
+
+          // Setup scroll triggers AFTER intro
+          ScrollTrigger.create({
+            trigger: "#canvas-pin",
+            start: "top top",
+            end: "+=200%",
+            pin: true,
+            scrub: true
+          });
+
+          // Zoom the camera during scroll
+          gsap.to(cameraRef.current, {
+            radius: 3,
+            scrollTrigger: {
+              trigger: "#section1",
+              start: "top center",
+              end: "bottom center",
+              scrub: true
+            }
+          });
+
+          // Rotate the model on scroll
+          gsap.to(modelRoot.rotation, {
+            y: Math.PI,
+            scrollTrigger: {
+              trigger: "#section2",
+              start: "top center",
+              end: "bottom center",
+              scrub: true
+            }
+          });
+        });
+      }
+    );
+
+    // Babylon render loop
     engine.runRenderLoop(() => {
       scene.render();
     });
 
+    // Handle window resize
     window.addEventListener("resize", () => {
       engine.resize();
     });
@@ -95,56 +134,96 @@ meshes.forEach(mesh => {
   }, []);
 
   return (
-    <div style={{ position: 'relative' }}>
-      {/* Babylon Canvas */}
-      <canvas ref={canvasRef} style={{ width: '100vw', height: '100vh', display: 'block', position: 'fixed', top: 0, left: 0, zIndex: 0 }} />
-  
-      {/* Feature Sections */}
+    <>
+      {/* 🔒 Intro Screen: Static Name */}
+      <div
+        id="intro-container"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: '#fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          transition: 'opacity 0.5s ease'
+        }}
+      >
+        <h1
+          id="intro-text"
+          style={{
+            fontSize: '4em',
+            fontWeight: '600',
+            color: '#111',
+            transition: 'opacity 0.5s ease'
+          }}
+        >
+          Sebastian Krols
+        </h1>
+      </div>
+
+      {/* 🖼️ Babylon Canvas */}
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: '100vw',
+          height: '100vh',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 0
+        }}
+      />
+
+      {/* 📜 Scroll Sections */}
       <div style={{ position: 'relative', zIndex: 1 }}>
-        <section id="section1" style={{ height: '100vh', position: 'relative' }}>
-          <div
-            className="featureText"
-            id="featureText1"
-            style={{
-              position: 'sticky',
-              top: '30%',
-              textAlign: 'center',
-              fontSize: '3em',
-              opacity: 0,
-              color: '#111',
-            }}
-          >
-            🛠 Precision Machining
-          </div>
-        </section>
-  
-        <section id="section2" style={{ height: '100vh', position: 'relative' }}>
-          <div
-            className="featureText"
-            id="featureText2"
-            style={{
-              position: 'sticky',
-              top: '30%',
-              textAlign: 'center',
-              fontSize: '3em',
-              opacity: 0,
-              color: '#111',
-            }}
-          >
-            ⚙️ Modular Design
-          </div>
-        </section>
-  
-        {/* 🧩 Add Extra Scroll Room */}
-        <section style={{ height: '100vh' }}>
+        {/* Pinned model canvas section */}
+        <section id="canvas-pin" style={{ height: '100vh' }} />
+
+        {/* Scroll starts here */}
+        <section id="section1" style={{
+  height: '100vh',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+}}>
+  <h2 style={{
+    fontSize: '2em',
+    color: '#fff',
+    textShadow: '0 2px 4px rgba(0,0,0,0.4)'
+  }}>
+    🔍 Zoomed In: Up Close Detail
+  </h2>
+</section>
+
+<section id="section2" style={{
+  height: '100vh',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+}}>
+  <h2 style={{
+    fontSize: '2em',
+    color: '#fff',
+    textShadow: '0 2px 4px rgba(0,0,0,0.4)'
+  }}>
+    🌀 Spinning to Show Full Geometry
+  </h2>
+</section>
+
+
+        {/* Final buffer section */}
+        <section style={{ height: '100vh', background: '#fafafa' }}>
           <div style={{ textAlign: 'center', paddingTop: '40vh', color: '#aaa' }}>
-            Scroll ends here
+            End of showcase
           </div>
         </section>
       </div>
-    </div>
+    </>
   );
-  
 }
 
 export default App;
