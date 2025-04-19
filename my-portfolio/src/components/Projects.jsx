@@ -12,14 +12,14 @@ function Projects() {
           <h5>Suspension Geometry</h5>
           <p className="text-muted">View the optimized suspension system in 3D.</p>
           <Link to="/viewer?model=model1.glb">
-            <Button variant="dark">View Model</Button>
+            <Button variant="white">View Model</Button>
           </Link>
         </Col>
         <Col md={4}>
           <h5>Steering Rack Cover</h5>
           <p className="text-muted">A machined aluminum steering rack prototype.</p>
           <Link to="/viewer?model=model2.glb">
-            <Button variant="dark">View Model</Button>
+            <Button variant="light">View Model</Button>
           </Link>
         </Col>
         <Col md={4}>
